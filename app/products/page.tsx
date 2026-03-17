@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, Suspense } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Image from 'next/image'
 import { useSearchParams } from 'next/navigation'
@@ -15,7 +15,7 @@ function getWhatsAppLink(productName: string) {
   return `https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`
 }
 
-export default function ProductsPage() {
+function ProductsContent() {
   const searchParams = useSearchParams()
   const initialCategory = searchParams.get('category') || 'all'
   const [activeCategory, setActiveCategory] = useState(initialCategory)
@@ -154,5 +154,13 @@ export default function ProductsPage() {
       <Footer />
       <WhatsAppButton />
     </main>
+  )
+}
+
+export default function ProductsPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading products...</div>}>
+      <ProductsContent />
+    </Suspense>
   )
 }
